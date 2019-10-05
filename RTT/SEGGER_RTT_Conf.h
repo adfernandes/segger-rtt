@@ -56,7 +56,7 @@ File    : SEGGER_RTT_Conf.h
 Purpose : Implementation of SEGGER real-time transfer (RTT) which
           allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
-Revision: $Rev: 13430 $
+Revision: $Rev: 15929 $
 
 */
 
@@ -126,7 +126,7 @@ Revision: $Rev: 13430 $
 *       RTT lock configuration for SEGGER Embedded Studio,
 *       Rowley CrossStudio and GCC
 */
-#if (defined __SES_ARM) || (defined __CROSSWORKS_ARM) || (defined __GNUC__) || (defined __clang__)
+#if (defined(__SES_ARM) || defined(__CROSSWORKS_ARM) || defined(__GNUC__) || defined(__clang__)) && !defined (__CC_ARM)
   #if (defined(__ARM_ARCH_6M__) || defined(__ARM_ARCH_8M_BASE__))
     #define SEGGER_RTT_LOCK()   {                                                                   \
                                     unsigned int LockState;                                         \
@@ -188,9 +188,6 @@ Revision: $Rev: 13430 $
                                                 : "r0", "r1"                   \
                                                 );                             \
                             }
-#else
-    #define SEGGER_RTT_LOCK()
-    #define SEGGER_RTT_UNLOCK()
   #endif
 #endif
 
