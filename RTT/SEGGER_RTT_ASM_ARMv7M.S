@@ -17,9 +17,6 @@ Additional information:
 #define SEGGER_RTT_ASM      // Used to control processed input from header file
 #include "SEGGER_RTT.h"
 
-#if defined (RTT_USE_ASM) && (RTT_USE_ASM == 1)
-
-
 /*********************************************************************
 *
 *       Defines, fixed
@@ -82,6 +79,7 @@ Additional information:
         .syntax unified
 #endif
 
+#if defined (RTT_USE_ASM) && (RTT_USE_ASM == 1)
         #define SHT_PROGBITS 0x1
 
 /*********************************************************************
@@ -230,8 +228,8 @@ _Case3:
         POP      {R4-R7}
         BX       LR                              // Return 0
         _PLACE_LITS
-        _END
 
 #endif  // defined (RTT_USE_ASM) && (RTT_USE_ASM == 1)
+        _END
 
 /*************************** End of file ****************************/
