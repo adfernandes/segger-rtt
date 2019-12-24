@@ -46,7 +46,7 @@ File    : SEGGER_RTT.c
 Purpose : Implementation of SEGGER real-time transfer (RTT) which
           allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
-Revision: $Rev: 16834 $
+Revision: $Rev: 17066 $
 
 Additional information:
           Type "int" is assumed to be 32-bits in size
@@ -1970,5 +1970,36 @@ unsigned SEGGER_RTT_GetAvailWriteSpace (unsigned BufferIndex){
   return _GetAvailWriteSpace(&_SEGGER_RTT.aUp[BufferIndex]);
 }
 
+
+/*********************************************************************
+*
+*       SEGGER_RTT_GetBytesInBuffer()
+*
+*  Function description
+*    Returns the number of bytes curretnly used in the up buffer.
+*
+*  Parameters
+*    BufferIndex  Index of the up buffer.
+*
+*  Return value
+*    Number of bytes that are used in the buffer.
+*/
+unsigned SEGGER_RTT_GetBytesInBuffer(unsigned BufferIndex) {
+  unsigned RdOff;
+  unsigned WrOff;
+  unsigned r;
+  //
+  // Avoid warnings regarding volatile access order.  It's not a problem
+  // in this case, but dampen compiler enthusiasm.
+  //
+  RdOff = _SEGGER_RTT.aUp[BufferIndex].RdOff;
+  WrOff = _SEGGER_RTT.aUp[BufferIndex].WrOff;
+  if (RdOff <= WrOff) {
+    r = WrOff - RdOff;
+  } else {
+    r = _SEGGER_RTT.aUp[BufferIndex].SizeOfBuffer - (WrOff - RdOff);
+  }
+  return r;
+}
 
 /*************************** End of file ****************************/
