@@ -17,7 +17,7 @@
 *                                                                    *
 * SEGGER strongly recommends to not make any changes                 *
 * to or modify the source code of this software in order to stay     *
-* compatible with the SystemView and RTT protocol, and J-Link.       *
+* compatible with the RTT protocol and J-Link.                       *
 *                                                                    *
 * Redistribution and use in source and binary forms, with or         *
 * without modification, are permitted provided that the following    *
@@ -46,7 +46,7 @@ File    : SEGGER_RTT.c
 Purpose : Implementation of SEGGER real-time transfer (RTT) which
           allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
-Revision: $Rev: 17066 $
+Revision: $Rev: 17732 $
 
 Additional information:
           Type "int" is assumed to be 32-bits in size
@@ -1976,7 +1976,7 @@ unsigned SEGGER_RTT_GetAvailWriteSpace (unsigned BufferIndex){
 *       SEGGER_RTT_GetBytesInBuffer()
 *
 *  Function description
-*    Returns the number of bytes curretnly used in the up buffer.
+*    Returns the number of bytes currently used in the up buffer.
 *
 *  Parameters
 *    BufferIndex  Index of the up buffer.
