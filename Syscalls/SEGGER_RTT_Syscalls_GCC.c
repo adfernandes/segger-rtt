@@ -46,7 +46,7 @@ File    : SEGGER_RTT_Syscalls_GCC.c
 Purpose : Low-level functions for using printf() via RTT in GCC.
           To use RTT for printf output, include this file in your 
           application.
-Revision: $Rev: 17732 $
+Revision: $Rev: 17697 $
 ----------------------------------------------------------------------
 */
 #if (defined __GNUC__) && !(defined __SES_ARM) && !(defined __CROSSWORKS_ARM)

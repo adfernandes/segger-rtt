@@ -44,7 +44,7 @@
 ---------------------------END-OF-HEADER------------------------------
 File    : SEGGER_RTT_printf.c
 Purpose : Replacement for printf to write formatted data via RTT
-Revision: $Rev: 17732 $
+Revision: $Rev: 17697 $
 ----------------------------------------------------------------------
 */
 #include "SEGGER_RTT.h"
