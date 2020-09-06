@@ -1,5 +1,8 @@
 README.txt for the SEGGER RTT Implementation Pack.
 
+MDK-ARM specifics:
+https://wiki.segger.com/Keil_MDK-ARM#RTT_in_uVision
+
 Included files:
 ===============
 Root Directory
