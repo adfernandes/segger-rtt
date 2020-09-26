@@ -45,7 +45,8 @@
 File    : RTT_Syscalls_KEIL.c
 Purpose : Retargeting module for KEIL MDK-CM3.
           Low-level functions for using printf() via RTT
-Revision: $Rev: 20159 $
+Revision: $Rev: 20754 $
+Notes   : (1) https://wiki.segger.com/Keil_MDK-ARM#RTT_in_uVision
 ----------------------------------------------------------------------
 */
 #if (defined __CC_ARM) || (defined __ARMCC_VERSION)
