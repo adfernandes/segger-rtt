@@ -46,7 +46,7 @@ File    : SEGGER_RTT.c
 Purpose : Implementation of SEGGER real-time transfer (RTT) which
           allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
-Revision: $Rev: 20869 $
+Revision: $Rev: 22333 $
 
 Additional information:
           Type "int" is assumed to be 32-bits in size
@@ -1647,19 +1647,21 @@ int SEGGER_RTT_AllocUpBuffer(const char* sName, void* pBuffer, unsigned BufferSi
 int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, void* pBuffer, unsigned BufferSize, unsigned Flags) {
   int r;
   volatile SEGGER_RTT_CB* pRTTCB;
+  volatile SEGGER_RTT_BUFFER_UP* pUp;
 
   INIT();
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
-  if (BufferIndex < (unsigned)pRTTCB->MaxNumUpBuffers) {
+  if (BufferIndex < SEGGER_RTT_MAX_NUM_UP_BUFFERS) {
     SEGGER_RTT_LOCK();
-    if (BufferIndex > 0u) {
-      pRTTCB->aUp[BufferIndex].sName        = sName;
-      pRTTCB->aUp[BufferIndex].pBuffer      = (char*)pBuffer;
-      pRTTCB->aUp[BufferIndex].SizeOfBuffer = BufferSize;
-      pRTTCB->aUp[BufferIndex].RdOff        = 0u;
-      pRTTCB->aUp[BufferIndex].WrOff        = 0u;
+    pUp = &pRTTCB->aUp[BufferIndex];
+    if (BufferIndex) {
+      pUp->sName        = sName;
+      pUp->pBuffer      = (char*)pBuffer;
+      pUp->SizeOfBuffer = BufferSize;
+      pUp->RdOff        = 0u;
+      pUp->WrOff        = 0u;
     }
-    pRTTCB->aUp[BufferIndex].Flags          = Flags;
+    pUp->Flags          = Flags;
     SEGGER_RTT_UNLOCK();
     r =  0;
   } else {
@@ -1696,19 +1698,21 @@ int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, void* pBu
 int SEGGER_RTT_ConfigDownBuffer(unsigned BufferIndex, const char* sName, void* pBuffer, unsigned BufferSize, unsigned Flags) {
   int r;
   volatile SEGGER_RTT_CB* pRTTCB;
+  volatile SEGGER_RTT_BUFFER_DOWN* pDown;
 
   INIT();
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
-  if (BufferIndex < (unsigned)pRTTCB->MaxNumDownBuffers) {
+  if (BufferIndex < SEGGER_RTT_MAX_NUM_DOWN_BUFFERS) {
     SEGGER_RTT_LOCK();
-    if (BufferIndex > 0u) {
-      pRTTCB->aDown[BufferIndex].sName        = sName;
-      pRTTCB->aDown[BufferIndex].pBuffer      = (char*)pBuffer;
-      pRTTCB->aDown[BufferIndex].SizeOfBuffer = BufferSize;
-      pRTTCB->aDown[BufferIndex].RdOff        = 0u;
-      pRTTCB->aDown[BufferIndex].WrOff        = 0u;
+    pDown = &pRTTCB->aDown[BufferIndex];
+    if (BufferIndex) {
+      pDown->sName        = sName;
+      pDown->pBuffer      = (char*)pBuffer;
+      pDown->SizeOfBuffer = BufferSize;
+      pDown->RdOff        = 0u;
+      pDown->WrOff        = 0u;
     }
-    pRTTCB->aDown[BufferIndex].Flags          = Flags;
+    pDown->Flags          = Flags;
     RTT__DMB();                     // Force data write to be complete before writing the <WrOff>, in case CPU is allowed to change the order of memory accesses
     SEGGER_RTT_UNLOCK();
     r =  0;
@@ -1737,12 +1741,14 @@ int SEGGER_RTT_ConfigDownBuffer(unsigned BufferIndex, const char* sName, void* p
 int SEGGER_RTT_SetNameUpBuffer(unsigned BufferIndex, const char* sName) {
   int r;
   volatile SEGGER_RTT_CB* pRTTCB;
+  volatile SEGGER_RTT_BUFFER_UP* pUp;
 
   INIT();
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
-  if (BufferIndex < (unsigned)pRTTCB->MaxNumUpBuffers) {
+  if (BufferIndex < SEGGER_RTT_MAX_NUM_UP_BUFFERS) {
     SEGGER_RTT_LOCK();
-    pRTTCB->aUp[BufferIndex].sName = sName;
+    pUp = &pRTTCB->aUp[BufferIndex];
+    pUp->sName = sName;
     SEGGER_RTT_UNLOCK();
     r =  0;
   } else {
@@ -1770,12 +1776,14 @@ int SEGGER_RTT_SetNameUpBuffer(unsigned BufferIndex, const char* sName) {
 int SEGGER_RTT_SetNameDownBuffer(unsigned BufferIndex, const char* sName) {
   int r;
   volatile SEGGER_RTT_CB* pRTTCB;
+  volatile SEGGER_RTT_BUFFER_DOWN* pDown;
 
   INIT();
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
-  if (BufferIndex < (unsigned)pRTTCB->MaxNumDownBuffers) {
+  if (BufferIndex < SEGGER_RTT_MAX_NUM_DOWN_BUFFERS) {
     SEGGER_RTT_LOCK();
-    pRTTCB->aDown[BufferIndex].sName = sName;
+    pDown = &pRTTCB->aDown[BufferIndex];
+    pDown->sName = sName;
     SEGGER_RTT_UNLOCK();
     r =  0;
   } else {
@@ -1803,12 +1811,14 @@ int SEGGER_RTT_SetNameDownBuffer(unsigned BufferIndex, const char* sName) {
 int SEGGER_RTT_SetFlagsUpBuffer(unsigned BufferIndex, unsigned Flags) {
   int r;
   volatile SEGGER_RTT_CB* pRTTCB;
+  volatile SEGGER_RTT_BUFFER_UP* pUp;
 
   INIT();
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
-  if (BufferIndex < (unsigned)pRTTCB->MaxNumUpBuffers) {
+  if (BufferIndex < SEGGER_RTT_MAX_NUM_UP_BUFFERS) {
     SEGGER_RTT_LOCK();
-    pRTTCB->aUp[BufferIndex].Flags = Flags;
+    pUp = &pRTTCB->aUp[BufferIndex];
+    pUp->Flags = Flags;
     SEGGER_RTT_UNLOCK();
     r =  0;
   } else {
@@ -1836,12 +1846,14 @@ int SEGGER_RTT_SetFlagsUpBuffer(unsigned BufferIndex, unsigned Flags) {
 int SEGGER_RTT_SetFlagsDownBuffer(unsigned BufferIndex, unsigned Flags) {
   int r;
   volatile SEGGER_RTT_CB* pRTTCB;
+  volatile SEGGER_RTT_BUFFER_DOWN* pDown;
 
   INIT();
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
-  if (BufferIndex < (unsigned)pRTTCB->MaxNumDownBuffers) {
+  if (BufferIndex < SEGGER_RTT_MAX_NUM_DOWN_BUFFERS) {
     SEGGER_RTT_LOCK();
-    pRTTCB->aDown[BufferIndex].Flags = Flags;
+    pDown = &pRTTCB->aDown[BufferIndex];
+    pDown->Flags = Flags;
     SEGGER_RTT_UNLOCK();
     r =  0;
   } else {
