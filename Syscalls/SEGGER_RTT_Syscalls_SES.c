@@ -47,7 +47,7 @@ Purpose : Reimplementation of printf, puts and __getchar using RTT
           in SEGGER Embedded Studio.
           To use RTT for printf output, include this file in your
           application.
-Revision: $Rev: 18539 $
+Revision: $Rev: 24316 $
 ----------------------------------------------------------------------
 */
 #if (defined __SES_ARM) || (defined __SES_RISCV) || (defined __CROSSWORKS_ARM)
