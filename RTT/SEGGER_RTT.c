@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2019 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2021 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -41,12 +41,17 @@
 * DAMAGE.                                                            *
 *                                                                    *
 **********************************************************************
+*                                                                    *
+*       RTT version: 7.88c                                           *
+*                                                                    *
+**********************************************************************
+
 ---------------------------END-OF-HEADER------------------------------
 File    : SEGGER_RTT.c
 Purpose : Implementation of SEGGER real-time transfer (RTT) which
           allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
-Revision: $Rev: 29687 $
+Revision: $Rev: 29668 $
 
 Additional information:
           Type "int" is assumed to be 32-bits in size
