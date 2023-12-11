@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2021 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2019 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -41,11 +41,6 @@
 * DAMAGE.                                                            *
 *                                                                    *
 **********************************************************************
-*                                                                    *
-*       RTT version: 7.88c                                           *
-*                                                                    *
-**********************************************************************
-
 ---------------------------END-OF-HEADER------------------------------
 File    : RTT_Syscalls_KEIL.c
 Purpose : Retargeting module for KEIL MDK-CM3.
@@ -329,14 +324,19 @@ int _sys_ensure(FILEHANDLE hFile) {
 */
 #if __ARMCC_VERSION >= 6190000
 void _sys_tmpnam(char * pBuffer, int FileNum, unsigned MaxLen) {
+  (void)pBuffer;
+  (void)FileNum;
+  (void)MaxLen;
+  return;      // Not implemented
+}
 #else
 int _sys_tmpnam(char * pBuffer, int FileNum, unsigned MaxLen) {
-#endif
   (void)pBuffer;
   (void)FileNum;
   (void)MaxLen;
   return (1);  // Not implemented
 }
+#endif
 
 /*********************************************************************
 *
